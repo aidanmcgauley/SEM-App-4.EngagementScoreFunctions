@@ -148,7 +148,4 @@ public class FunctionsTest {
         assertEquals(32, result); // Calculated based on the provided weights
     }
 
-
-
-
 }

@@ -30,25 +30,17 @@ public class Application {
         Map<String, Object> response = new HashMap<>();
 
         String[] items = {item_1, item_2, item_3, item_4};
-        int[] attendances = {
-                Integer.parseInt(attendance_1),
-                Integer.parseInt(attendance_2),
-                Integer.parseInt(attendance_3),
-                Integer.parseInt(attendance_4)
-        };
-        int[] totalHours = {
-                Integer.parseInt(total_hours_1),
-                Integer.parseInt(total_hours_2),
-                Integer.parseInt(total_hours_3),
-                Integer.parseInt(total_hours_4)
-        };
+        String[] attendances = {attendance_1, attendance_2, attendance_3, attendance_4};
+        String[] totalHours = {total_hours_1, total_hours_2, total_hours_3, total_hours_4};
 
         // First, call parameterChecker to validate the inputs
         Map<String, Object> parameterCheckOutput = Functions.parameterChecker(items, attendances, totalHours);
 
         // If no error found, call getEngagementScore and proceed
         if (!(boolean) parameterCheckOutput.get("error")) {
-            int engagementScore = Functions.getEngagementScore(attendances, totalHours);
+            int[] attendancesInt = (int[]) parameterCheckOutput.get("attendance_int");
+            int[] totalHoursInt = (int[]) parameterCheckOutput.get("total_hours_int");
+            int engagementScore = Functions.getEngagementScore(attendancesInt, totalHoursInt);
             response.put("error", false);
             response.put("engagement_score", engagementScore);
         } else {

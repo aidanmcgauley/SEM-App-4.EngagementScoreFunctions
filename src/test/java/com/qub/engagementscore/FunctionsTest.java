@@ -14,95 +14,82 @@ public class FunctionsTest {
     // TESTING THE parameterChecker
 
     @Test
-    void testValidInput() {
-        String[] items = {"Lecture", "Lab", "Support", "Canvas"};
-        int[] attendances = {2, 1, 2, 2};
-        int[] total_hours = {33, 22, 44, 55};
+    public void testEmptyItemName() {
+        String[] items = { "Session1", "", "Session3" };
+        String[] attendances = { "5", "6", "7", "8" };
+        String[] totalHours = { "10", "10", "10", "10" };
 
-        Map<String, Object> output = Functions.parameterChecker(items, attendances, total_hours);
-
-        assertFalse((boolean) output.get("error"));
-        assertArrayEquals(items, (Object[]) output.get("items"));
-        assertArrayEquals(attendances, (int[]) output.get("attendance"));
+        Map<String, Object> result = Functions.parameterChecker(items, attendances, totalHours);
+        assertTrue((Boolean) result.get("error"));
+        assertEquals("Item names cannot be empty.", result.get("message"));
     }
 
     @Test
-    void testEmptyItemName() {
-        String[] items = {"", "Lab", "Support", "Canvas"}; //Empty item
-        int[] attendances = {2, 1, 2, 2};
-        int[] total_hours = {33, 22, 44, 55};
+    public void testAttendancesLessThanFour() {
+        String[] items = { "Session1", "Session2", "Session3" };
+        String[] attendances = { "5", "6", "7" };
+        String[] totalHours = { "10", "10", "10", "10" };
 
-        Map<String, Object> output = Functions.parameterChecker(items, attendances, total_hours);
-
-        assertTrue((boolean) output.get("error"));
-        assertArrayEquals(items, (Object[]) output.get("items"));
-        assertArrayEquals(attendances, (int[]) output.get("attendance"));
+        Map<String, Object> result = Functions.parameterChecker(items, attendances, totalHours);
+        assertTrue((Boolean) result.get("error"));
+        assertEquals("Attendances array must have at least 4 values.", result.get("message"));
     }
 
     @Test
-    void testMissingAttendance() {
-        String[] items = {"", "Lab", "Support", "Canvas"}; //Empty item
-        int[] attendances = {2, 2, 2};
-        int[] total_hours = {33, 22, 44, 55};
-
-        Map<String, Object> output = Functions.parameterChecker(items, attendances, total_hours);
-
-        assertTrue((boolean) output.get("error"));
-        assertArrayEquals(items, (Object[]) output.get("items"));
-        assertArrayEquals(attendances, (int[]) output.get("attendance"));
+    public void testTotalHoursLessThanFour() {
+        String[] items = { "Session1", "Session2", "Session3" };
+        String[] attendances = { "5", "6", "7", "8" };
+        String[] totalHours = { "10", "10", "10" };
+    
+        Map<String, Object> result = Functions.parameterChecker(items, attendances, totalHours);
+        assertTrue((Boolean) result.get("error"));
+        assertEquals("Total hours array must have at least 4 values.", result.get("message"));
+    }
+    
+    @Test
+    public void testNonIntegerValues() {
+        String[] items = { "Session1", "Session2", "Session3" };
+        String[] attendances = { "5", "6", "seven", "3" };
+        String[] totalHours = { "10", "ten", "10", "30" };
+    
+        Map<String, Object> result = Functions.parameterChecker(items, attendances, totalHours);
+        assertTrue((Boolean) result.get("error"));
+        assertEquals("Attendance and total hours must be integers.", result.get("message"));
+    }
+    
+    @Test
+    public void testNegativeAttendance() {
+        String[] items = { "Session1", "Session2", "Session3" };
+        String[] attendances = { "5", "-6", "7", "8" };
+        String[] totalHours = { "10", "10", "10", "10" };
+    
+        Map<String, Object> result = Functions.parameterChecker(items, attendances, totalHours);
+        assertTrue((Boolean) result.get("error"));
+        assertEquals("Attendance hours cannot be negative.", result.get("message"));
+    }
+    
+    @Test
+    public void testNegativeTotalHours() {
+        String[] items = { "Session1", "Session2", "Session3" };
+        String[] attendances = { "5", "6", "7", "8" };
+        String[] totalHours = { "10", "-10", "10", "10" };
+    
+        Map<String, Object> result = Functions.parameterChecker(items, attendances, totalHours);
+        assertTrue((Boolean) result.get("error"));
+        assertEquals("Total hours cannot be negative.", result.get("message"));
     }
 
     @Test
-    void testMissingTotalHour() {
-        String[] items = {"", "Lab", "Support", "Canvas"}; //Empty item
-        int[] attendances = {2, 1, 2, 2};
-        int[] total_hours = {33, 44, 55};
-
-        Map<String, Object> output = Functions.parameterChecker(items, attendances, total_hours);
-
-        assertTrue((boolean) output.get("error"));
-        assertArrayEquals(items, (Object[]) output.get("items"));
-        assertArrayEquals(attendances, (int[]) output.get("attendance"));
+    public void testExceedingAttendanceHours() {
+        String[] items = { "Session1", "Session2", "Session3" };
+        String[] attendances = { "5", "11", "7", "8" };
+        String[] totalHours = { "10", "10", "10", "10" };
+    
+        Map<String, Object> result = Functions.parameterChecker(items, attendances, totalHours);
+        assertTrue((Boolean) result.get("error"));
+        assertEquals("Attendance hours cannot exceed total assigned hours.", result.get("message"));
     }
-
-    @Test
-    void testAttendanceExceedsTotalHours() {
-        String[] items = {"Lecture", "Lab", "Support", "Canvas"}; //Empty item
-        int[] attendances = {200, 100, 200, 200};
-        int[] total_hours = {33, 22, 44, 55};
-
-        Map<String, Object> output = Functions.parameterChecker(items, attendances, total_hours);
-
-        assertTrue((boolean) output.get("error"));
-        assertArrayEquals(items, (Object[]) output.get("items"));
-        assertArrayEquals(attendances, (int[]) output.get("attendance"));
-    }
-
-    @Test
-    void testNegativeAttendance() {
-        String[] items = {"", "Lab", "Support", "Canvas"}; //Empty item
-        int[] attendances = {-2, -1, -2, 2};
-        int[] total_hours = {33, 22, 44, 55};
-
-        Map<String, Object> output = Functions.parameterChecker(items, attendances, total_hours);
-
-        assertTrue((boolean) output.get("error"));
-        assertArrayEquals(items, (Object[]) output.get("items"));
-        assertArrayEquals(attendances, (int[]) output.get("attendance"));
-    }
-
-    @Test
-    void testNegativeTotalHours() {
-        String[] items = {"", "Lab", "Support", "Canvas"}; //Empty item
-        int[] attendances = {2, 1, 2, 2};
-        int[] total_hours = {-33, -22, -44, -55};
-
-        Map<String, Object> output = Functions.parameterChecker(items, attendances, total_hours);
-
-        assertTrue((boolean) output.get("error"));
-        assertArrayEquals(items, (Object[]) output.get("items"));
-        assertArrayEquals(attendances, (int[]) output.get("attendance"));
-    }
+    
 
     // TESTING THE getEngagementScore FUNCTION
     // ChatGPT with Wolfram was handy for quickly working out calculations

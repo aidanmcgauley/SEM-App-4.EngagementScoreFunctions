@@ -9,13 +9,16 @@ import java.util.HashMap;
 
 public class Functions {
     
-    public static Map<String, Object> parameterChecker(String[] items, int[] attendances, int[] totalHours) {
+    public static Map<String, Object> parameterChecker(String[] items, String[] attendances, String[] totalHours) {
         Map<String, Object> output = new HashMap<>();
         output.put("error", false);
         output.put("message", "");
         output.put("items", items);
-        output.put("attendance", attendances);
-        output.put("total_hours", totalHours);
+        //output.put("attendance", attendances);
+        //output.put("total_hours", totalHours);
+
+        int[] attendancesInt = new int[attendances.length];
+        int[] totalHoursInt = new int[totalHours.length];
 
         // Check if any session names are empty
         for (String item : items) {
@@ -41,30 +44,41 @@ public class Functions {
         }
 
         for (int i = 0; i < attendances.length; i++) {
-            int attendance = attendances[i];
-            int totalAssignedHours = totalHours[i];
+            //int attendance;
+            //int totalAssignedHours;
+            try {
+                attendancesInt[i] = Integer.parseInt(attendances[i]);
+                totalHoursInt[i] = Integer.parseInt(totalHours[i]);
+            } catch (NumberFormatException e) {
+                output.put("error", true);
+                output.put("message", "Attendance and total hours must be integers.");
+                return output;
+            }
 
             // Check if attendance is non-negative
-            if (attendance < 0) {
+            if (attendancesInt[i] < 0) {
                 output.put("error", true);
                 output.put("message", "Attendance hours cannot be negative.");
                 return output;
             }
 
             // Check if total hours is non-negative
-            if (totalAssignedHours < 0) {
+            if (totalHoursInt[i] < 0) {
                 output.put("error", true);
                 output.put("message", "Total hours cannot be negative.");
                 return output;
             }
 
             // Check if attendance is within acceptable range
-            if (attendance > totalAssignedHours) {
+            if (attendancesInt[i] > totalHoursInt[i]) {
                 output.put("error", true);
                 output.put("message", "Attendance hours cannot exceed total assigned hours.");
                 return output;
             }
         }
+
+        output.put("attendance_int", attendancesInt);
+        output.put("total_hours_int", totalHoursInt);
 
         return output;
     }

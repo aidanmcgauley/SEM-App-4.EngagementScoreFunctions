@@ -9,5 +9,5 @@ RUN mvn package
 FROM openjdk:11-jre-slim
 WORKDIR /app
 # Copy the built JAR file from the builder stage
-COPY --from=builder /build/target/your-artifact.jar /app/
+COPY --from=builder /build/target/demo-0.0.1-SNAPSHOT.jar /app/
 CMD ["java", "-jar", "/app/demo-0.0.1-SNAPSHOT.jar"]

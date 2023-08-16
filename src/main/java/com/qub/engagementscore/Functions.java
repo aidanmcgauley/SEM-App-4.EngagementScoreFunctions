@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.HashMap;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8000")
+@CrossOrigin(origins = "http://sem-frontend.40058902.qpc.hal.davecutting.uk/")
 
 public class Functions {
     

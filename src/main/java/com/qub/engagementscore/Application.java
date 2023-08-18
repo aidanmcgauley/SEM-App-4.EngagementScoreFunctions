@@ -9,7 +9,7 @@ import java.util.Map;
 
 @SpringBootApplication
 @RestController
-@CrossOrigin(origins = "http://sem-frontend.40058902.qpc.hal.davecutting.uk/")
+@CrossOrigin(origins = "*")
 public class Application {
 
     @GetMapping("/")
